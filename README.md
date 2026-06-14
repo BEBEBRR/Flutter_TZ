@@ -58,8 +58,8 @@ lib/
 
 ```bash
 # 1. Клонируй репозиторий
-git clone https://github.com/<твой-username>/my_tz.git
-cd my_tz
+https://github.com/BEBEBRR/Flutter_TZ.git
+cd Flutter_TZ
 
 # 2. Установи зависимости
 flutter pub get
