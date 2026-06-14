@@ -1,17 +1,104 @@
-# my_tz
+# Мероприятия — Flutter App
 
-A new Flutter project.
+Мобильное приложение для просмотра и фильтрации мероприятий.  
+Реализовано по макету Figma в рамках тестового задания.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## Экраны
 
-A few resources to get you started if this is your first Flutter project:
+| Экран | Описание |
+|---|---|
+| **Список мероприятий** | Фильтрация по городу, формату, типу и дате. Табы: Все / Избранное / Мои регистрации |
+| **Карточка мероприятия** | Детальная страница: описание, регистрация, программа, автор |
+| **Программа мероприятия** | Таймлайн сессий с анимацией + список спикеров |
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Архитектура
+
+```
+lib/
+├── constants/
+│   ├── app_colors.dart        # Цветовая палитра
+│   └── app_text_styles.dart   # Типография
+├── models/
+│   └── event_model.dart       # EventModel, ProgramItem, Speaker
+├── data/
+│   └── mock_events.dart       # Мок-данные (события, города, типы)
+├── widgets/
+│   ├── event_card.dart            # Карточка в списке
+│   ├── tab_filter_bar.dart        # Горизонтальные табы
+│   ├── event_filter_chip.dart     # Чипы фильтров
+│   ├── city_picker_modal.dart     # Выбор города
+│   ├── filter_bottom_sheet.dart   # Фильтр формата и типа
+│   ├── calendar_bottom_sheet.dart # Календарь
+│   ├── program_timeline_item.dart # Элемент таймлайна
+│   └── speaker_card.dart          # Карточка спикера
+├── screens/
+│   ├── event_list_screen.dart     # Список мероприятий
+│   ├── event_detail_screen.dart   # Детальная карточка
+│   └── event_program_screen.dart  # Программа мероприятия
+└── main.dart
+```
+
+**State management:** `StatefulWidget` + `setState` (по условию ТЗ).  
+Без внешних пакетов — только Flutter SDK.
+
+---
+
+## Как запустить
+
+### Требования
+- Flutter SDK `>=3.0.0`
+- Dart `>=3.0.0`
+- Android SDK или iOS Simulator / физическое устройство
+
+### Установка и запуск
+
+```bash
+# 1. Клонируй репозиторий
+git clone https://github.com/<твой-username>/my_tz.git
+cd my_tz
+
+# 2. Установи зависимости
+flutter pub get
+
+# 3. Запусти приложение
+flutter run
+```
+
+### Запуск на конкретном устройстве
+
+```bash
+# Посмотреть доступные устройства
+flutter devices
+
+# Запустить на конкретном устройстве
+flutter run -d <device_id>
+```
+
+---
+
+## Функциональность
+
+- **Список мероприятий** — фильтрация по городу (список городов Казахстана), формату (Онлайн/Оффлайн), типу мероприятия и дате через календарь
+- **Лайки** — добавление/удаление в избранное с анимацией сердечка
+- **Фильтры** — отображаются активные чипы с возможностью удаления
+- **Карточка** — разворачиваемое описание («Читать дальше»), навигация к программе
+- **Программа** — таймлайн с анимирующимся зелёным кружком «Сейчас идёт», статусы сессий
+- **Календарь** — выбор даты с отображением событий дня
+- **Пустые состояния** — отображаются при отсутствии мероприятий по фильтру
+
+---
+
+## Технические решения
+
+- `const` конструкторы везде где возможно — минимизация перестроений дерева
+- `AnimatedContainer` для плавных переходов состояний чипов
+- `AnimatedCrossFade` для разворачивания описания
+- `ScaleTransition` на кнопке лайка
+- Пульсирующая анимация зелёного кружка на экране программы через `AnimationController`
+- `DraggableScrollableSheet` для нижних панелей фильтров
+- `SliverAppBar` с hero-изображением на экране мероприятия
+
