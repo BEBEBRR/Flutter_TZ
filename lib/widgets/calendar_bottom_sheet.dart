@@ -32,7 +32,9 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
 
   Set<DateTime> get _eventDates {
     return widget.events
-        .map((e) => DateTime(e.startTime.year, e.startTime.month, e.startTime.day))
+        .map(
+          (e) => DateTime(e.startTime.year, e.startTime.month, e.startTime.day),
+        )
         .toSet();
   }
 
@@ -98,30 +100,66 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
 
   Widget _buildHeader() {
     const monthNames = [
-      'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-      'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
+      'Январь',
+      'Февраль',
+      'Март',
+      'Апрель',
+      'Май',
+      'Июнь',
+      'Июль',
+      'Август',
+      'Сентябрь',
+      'Октябрь',
+      'Ноябрь',
+      'Декабрь',
     ];
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Календарь', style: AppTextStyles.heading2),
+        const Text('Календарь', style: AppTextStyles.heading1),
+        const SizedBox(height: 20),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
               onTap: _previousMonth,
-              child: const Icon(Icons.chevron_left, color: AppColors.textSecondary),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                '${monthNames[_focusedMonth.month - 1]} ${_focusedMonth.year}',
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.chevron_left,
+                  color: AppColors.textPrimary,
+                  size: 28,
+                ),
               ),
+            ),
+            Column(
+              children: [
+                Text(
+                  monthNames[_focusedMonth.month - 1],
+                  style: AppTextStyles.heading2.copyWith(fontSize: 18),
+                ),
+                Text('${_focusedMonth.year}', style: AppTextStyles.caption),
+              ],
             ),
             GestureDetector(
               onTap: _nextMonth,
-              child: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.textPrimary,
+                  size: 28,
+                ),
+              ),
             ),
           ],
         ),
@@ -153,7 +191,10 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
     final firstDay = DateTime(_focusedMonth.year, _focusedMonth.month, 1);
     // Weekday: 1=Mon … 7=Sun
     final startOffset = (firstDay.weekday - 1) % 7;
-    final daysInMonth = DateUtils.getDaysInMonth(_focusedMonth.year, _focusedMonth.month);
+    final daysInMonth = DateUtils.getDaysInMonth(
+      _focusedMonth.year,
+      _focusedMonth.month,
+    );
     final eventDates = _eventDates;
     final today = DateTime.now();
 
@@ -173,7 +214,9 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
         GestureDetector(
           onTap: () {
             setState(() {
-              _selectedDate = DateUtils.isSameDay(date, _selectedDate) ? null : date;
+              _selectedDate = DateUtils.isSameDay(date, _selectedDate)
+                  ? null
+                  : date;
             });
             widget.onDateSelected(_selectedDate);
           },
@@ -192,8 +235,8 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                     color: isSelected
                         ? Colors.white
                         : isToday
-                            ? AppColors.primary
-                            : AppColors.textPrimary,
+                        ? AppColors.primary
+                        : AppColors.textPrimary,
                     fontWeight: isToday || isSelected
                         ? FontWeight.w700
                         : FontWeight.w400,
@@ -239,10 +282,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${events.length} мероприятий',
-          style: AppTextStyles.sectionCount,
-        ),
+        Text('${events.length} мероприятий', style: AppTextStyles.sectionCount),
         const SizedBox(height: 8),
         ...events.map(
           (e) => Padding(
