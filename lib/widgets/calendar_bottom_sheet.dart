@@ -67,21 +67,23 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildHandle(),
-          _buildHeader(),
-          const SizedBox(height: 12),
-          _buildWeekDaysRow(),
-          _buildCalendarGrid(),
-          if (_selectedDate != null) ...[
-            const Divider(height: 24),
-            _buildSelectedDateEvents(),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildHandle(),
+            _buildHeader(),
+            const SizedBox(height: 12),
+            _buildWeekDaysRow(),
+            _buildCalendarGrid(),
+            if (_selectedDate != null) ...[
+              const Divider(height: 24),
+              _buildSelectedDateEvents(),
+            ],
+            const SizedBox(height: 24),
           ],
-          const SizedBox(height: 24),
-        ],
+        ),
       ),
     );
   }
@@ -279,38 +281,133 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
       );
     }
 
+    const weekDays = [
+      'Понедельник',
+      'Вторник',
+      'Среда',
+      'Четверг',
+      'Пятница',
+      'Суббота',
+      'Воскресенье',
+    ];
+    const monthsInfo = [
+      'янв',
+      'фев',
+      'мар',
+      'апр',
+      'мая',
+      'июн',
+      'июл',
+      'авг',
+      'сен',
+      'окт',
+      'ноя',
+      'дек',
+    ];
+
+    String dateString = '';
+    if (_selectedDate != null) {
+      final d = _selectedDate!;
+      final wd = weekDays[d.weekday - 1];
+      dateString = '$wd, ${d.day} ${monthsInfo[d.month - 1]}';
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('${events.length} мероприятий', style: AppTextStyles.sectionCount),
-        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              dateString,
+              style: AppTextStyles.body.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            Text(
+              '${events.length} мероприятия',
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
         ...events.map(
-          (e) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
+          (e) => Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(12),
+
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 64,
+                  height: 64,
                   decoration: BoxDecoration(
                     color: AppColors.imagePlaceholder,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 const SizedBox(width: 12),
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         e.title,
-                        style: AppTextStyles.eventTitle,
+                        style: AppTextStyles.heading2,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 2),
-                      Text(e.formattedTime, style: AppTextStyles.eventDate),
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.access_time_rounded,
+                            size: 16,
+                            color: AppColors.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            e.formattedTime,
+                            style: AppTextStyles.bodySecondary,
+                          ),
+                        ],
+                      ),
                     ],
+                  ),
+                ),
+
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      e.isFavorite = !e.isFavorite;
+                    });
+                  },
+
+                  child: Icon(
+                    e.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: e.isFavorite
+                        ? AppColors.primary
+                        : AppColors.textSecondary,
+                    size: 24,
                   ),
                 ),
               ],
