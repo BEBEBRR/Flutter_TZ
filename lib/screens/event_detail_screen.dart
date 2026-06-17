@@ -1,3 +1,4 @@
+import '../widgets/animated_heart_button.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_text_styles.dart';
@@ -18,8 +19,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   static const int _descriptionMaxLines = 4;
 
   void _toggleFavorite() => setState(() {
-        widget.event.isFavorite = !widget.event.isFavorite;
-      });
+    widget.event.isFavorite = !widget.event.isFavorite;
+  });
 
   void _navigateToProgram() {
     Navigator.push(
@@ -93,10 +94,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.3),
-                      Colors.transparent,
-                    ],
+                    colors: [Colors.black.withOpacity(0.3), Colors.transparent],
                   ),
                 ),
               ),
@@ -112,10 +110,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             color: Colors.white.withOpacity(0.9),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
-            Icons.chevron_left,
-            color: AppColors.textPrimary,
-          ),
+          child: const Icon(Icons.chevron_left, color: AppColors.textPrimary),
         ),
       ),
       actions: [
@@ -128,14 +123,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               color: Colors.white.withOpacity(0.9),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              widget.event.isFavorite
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-              color: widget.event.isFavorite
-                  ? AppColors.primary
-                  : AppColors.textPrimary,
+            child: AnimatedHeartButton(
+              isFavorite: widget.event.isFavorite,
               size: 20,
+              inactiveColor: AppColors.textPrimary,
+              onTap: _toggleFavorite,
             ),
           ),
         ),
@@ -179,8 +171,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   Widget _buildDateRow() {
     return Row(
       children: [
-        const Icon(Icons.access_time_rounded,
-            size: 16, color: AppColors.primary),
+        const Icon(
+          Icons.access_time_rounded,
+          size: 16,
+          color: AppColors.primary,
+        ),
         const SizedBox(width: 6),
         Text(widget.event.formattedDateAndTime, style: AppTextStyles.body),
       ],
@@ -190,8 +185,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   Widget _buildCityRow() {
     return Row(
       children: [
-        const Icon(Icons.location_on_outlined,
-            size: 16, color: AppColors.textSecondary),
+        const Icon(
+          Icons.location_on_outlined,
+          size: 16,
+          color: AppColors.textSecondary,
+        ),
         const SizedBox(width: 6),
         Text(widget.event.city, style: AppTextStyles.bodySecondary),
       ],
@@ -204,8 +202,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       height: 48,
       child: OutlinedButton.icon(
         onPressed: () {},
-        icon: const Icon(Icons.calendar_today_outlined,
-            size: 18, color: AppColors.primary),
+        icon: const Icon(
+          Icons.calendar_today_outlined,
+          size: 18,
+          color: AppColors.primary,
+        ),
         label: const Text(
           'Добавить в календарь',
           style: AppTextStyles.buttonSecondary,
@@ -234,8 +235,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           ),
           elevation: 0,
         ),
-        child: const Text('Зарегистрироваться',
-            style: AppTextStyles.buttonPrimary),
+        child: const Text(
+          'Зарегистрироваться',
+          style: AppTextStyles.buttonPrimary,
+        ),
       ),
     );
   }
@@ -264,8 +267,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         ),
         const SizedBox(height: 6),
         GestureDetector(
-          onTap: () => setState(
-              () => _isDescriptionExpanded = !_isDescriptionExpanded),
+          onTap: () =>
+              setState(() => _isDescriptionExpanded = !_isDescriptionExpanded),
           child: Text(
             _isDescriptionExpanded ? 'Свернуть' : 'Читать дальше',
             style: AppTextStyles.buttonSecondary,
@@ -286,15 +289,23 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_view_day_outlined,
-                color: AppColors.primary, size: 22),
+            const Icon(
+              Icons.calendar_view_day_outlined,
+              color: AppColors.primary,
+              size: 22,
+            ),
             const SizedBox(width: 12),
             const Expanded(
-              child: Text('Программа мероприятия',
-                  style: AppTextStyles.heading2),
+              child: Text(
+                'Программа мероприятия',
+                style: AppTextStyles.heading2,
+              ),
             ),
-            const Icon(Icons.chevron_right,
-                color: AppColors.textSecondary, size: 22),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textSecondary,
+              size: 22,
+            ),
           ],
         ),
       ),
@@ -323,10 +334,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text(
-                  widget.event.authorCompany,
-                  style: AppTextStyles.caption,
-                ),
+                Text(widget.event.authorCompany, style: AppTextStyles.caption),
               ],
             ),
           ],

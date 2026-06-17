@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_text_styles.dart';
 import '../models/event_model.dart';
+import '../screens/event_detail_screen.dart';
+import 'animated_heart_button.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
   final List<EventModel> events;
@@ -336,81 +338,83 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
         const SizedBox(height: 16),
 
         ...events.map(
-          (e) => Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(12),
+          (e) => GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => EventDetailScreen(event: e)),
+              ).then((_) => setState(() {}));
+            },
 
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: AppColors.imagePlaceholder,
-                    borderRadius: BorderRadius.circular(8),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
-                ),
-                const SizedBox(width: 12),
+                ],
+              ),
 
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        e.title,
-                        style: AppTextStyles.heading2,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.access_time_rounded,
-                            size: 16,
-                            color: AppColors.primary,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            e.formattedTime,
-                            style: AppTextStyles.bodySecondary,
-                          ),
-                        ],
-                      ),
-                    ],
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: AppColors.imagePlaceholder,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 12),
 
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      e.isFavorite = !e.isFavorite;
-                    });
-                  },
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          e.title,
+                          style: AppTextStyles.heading2,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
 
-                  child: Icon(
-                    e.isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: e.isFavorite
-                        ? AppColors.primary
-                        : AppColors.textSecondary,
-                    size: 24,
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time_rounded,
+                              size: 16,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              e.formattedTime,
+                              style: AppTextStyles.bodySecondary,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+
+                  AnimatedHeartButton(
+                    isFavorite: e.isFavorite,
+                    onTap: () {
+                      setState(() {
+                        e.isFavorite = !e.isFavorite;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

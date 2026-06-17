@@ -35,8 +35,10 @@ class _EventListScreenState extends State<EventListScreen> {
       if (_selectedTabIndex == 1 && !event.isFavorite) return false;
       if (_selectedTabIndex == 2) return false; // нет регистраций в моке
       if (event.city != _selectedCity) return false;
-      if (_isOnline == true && event.format == EventFormat.offline) return false;
-      if (_isOnline == false && event.format == EventFormat.online) return false;
+      if (_isOnline == true && event.format == EventFormat.offline)
+        return false;
+      if (_isOnline == false && event.format == EventFormat.online)
+        return false;
       if (_selectedTypes.isNotEmpty && !_selectedTypes.contains(event.type)) {
         return false;
       }
@@ -92,15 +94,13 @@ class _EventListScreenState extends State<EventListScreen> {
         selectedDate: _selectedDate,
         onDateSelected: (date) => setState(() => _selectedDate = date),
       ),
-    );
+    ).then((_) => setState(() {}));
   }
 
   void _navigateToDetail(EventModel event) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => EventDetailScreen(event: event),
-      ),
+      MaterialPageRoute(builder: (_) => EventDetailScreen(event: event)),
     ).then((_) => setState(() {})); // refresh на возврате (обновление лайков)
   }
 
@@ -142,7 +142,11 @@ class _EventListScreenState extends State<EventListScreen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Row(
         children: [
-          const Icon(Icons.chevron_left, size: 28, color: AppColors.textPrimary),
+          const Icon(
+            Icons.chevron_left,
+            size: 28,
+            color: AppColors.textPrimary,
+          ),
           const SizedBox(width: 4),
           const Expanded(
             child: Text('Мероприятия', style: AppTextStyles.appBarTitle),
@@ -252,10 +256,7 @@ class _EventListScreenState extends State<EventListScreen> {
           children: [
             Icon(Icons.event_busy, size: 48, color: AppColors.textSecondary),
             SizedBox(height: 12),
-            Text(
-              'Нет мероприятий',
-              style: AppTextStyles.heading2,
-            ),
+            Text('Нет мероприятий', style: AppTextStyles.heading2),
             SizedBox(height: 4),
             Text(
               'Попробуйте изменить фильтры',
