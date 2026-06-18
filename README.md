@@ -27,6 +27,7 @@ lib/
 ├── data/
 │   └── mock_events.dart       # Мок-данные (события, города, типы)
 ├── widgets/
+|   ├── animated_heart_button.dart # Анимация избранного
 │   ├── event_card.dart            # Карточка в списке
 │   ├── tab_filter_bar.dart        # Горизонтальные табы
 │   ├── event_filter_chip.dart     # Чипы фильтров
