@@ -22,26 +22,18 @@ class SpeakerCard extends StatelessWidget {
           const CircleAvatar(
             radius: 28,
             backgroundColor: AppColors.imagePlaceholder,
+            child: Icon(Icons.person, color: Colors.white, size: 32),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  speaker.name,
-                  style: AppTextStyles.heading2,
-                ),
+                Text(speaker.name, style: AppTextStyles.heading2),
                 const SizedBox(height: 2),
-                Text(
-                  speaker.role,
-                  style: AppTextStyles.bodySecondary,
-                ),
+                Text(speaker.role, style: AppTextStyles.bodySecondary),
                 const SizedBox(height: 2),
-                Text(
-                  speaker.company,
-                  style: AppTextStyles.caption,
-                ),
+                Text(speaker.company, style: AppTextStyles.caption),
               ],
             ),
           ),

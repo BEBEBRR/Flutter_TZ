@@ -86,7 +86,9 @@ class _ProgramTimelineItemState extends State<ProgramTimelineItem>
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: AppColors.activeGreen.withOpacity(_pulseAnim!.value * 0.5),
+                color: AppColors.activeGreen.withOpacity(
+                  _pulseAnim!.value * 0.5,
+                ),
                 blurRadius: 6,
                 spreadRadius: 2,
               ),
@@ -117,9 +119,7 @@ class _ProgramTimelineItemState extends State<ProgramTimelineItem>
           ? BoxDecoration(
               color: AppColors.nowBackground,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: AppColors.nowBorder.withOpacity(0.4),
-              ),
+              border: Border.all(color: AppColors.nowBorder.withOpacity(0.4)),
             )
           : null,
       child: Column(
@@ -143,6 +143,7 @@ class _ProgramTimelineItemState extends State<ProgramTimelineItem>
               const CircleAvatar(
                 radius: 14,
                 backgroundColor: AppColors.imagePlaceholder,
+                child: Icon(Icons.person, color: Colors.white, size: 18),
               ),
               const SizedBox(width: 8),
               Column(
