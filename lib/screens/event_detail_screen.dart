@@ -249,30 +249,55 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       children: [
         const Text('Описание', style: AppTextStyles.heading2),
         const SizedBox(height: 8),
-        AnimatedCrossFade(
-          duration: const Duration(milliseconds: 250),
-          crossFadeState: _isDescriptionExpanded
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
-          firstChild: Text(
-            widget.event.description,
-            style: AppTextStyles.body,
-            maxLines: _descriptionMaxLines,
-            overflow: TextOverflow.ellipsis,
-          ),
-          secondChild: Text(
-            widget.event.description,
-            style: AppTextStyles.body,
-          ),
-        ),
-        const SizedBox(height: 6),
-        GestureDetector(
-          onTap: () =>
-              setState(() => _isDescriptionExpanded = !_isDescriptionExpanded),
-          child: Text(
-            _isDescriptionExpanded ? 'Свернуть' : 'Читать дальше',
-            style: AppTextStyles.buttonSecondary,
-          ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final span = TextSpan(
+              text: widget.event.description,
+              style: AppTextStyles.body,
+            );
+            final tp = TextPainter(
+              text: span,
+              textDirection: TextDirection.ltr,
+              maxLines: _descriptionMaxLines,
+            );
+            tp.layout(maxWidth: constraints.maxWidth);
+            final isOverflowing = tp.didExceedMaxLines;
+            if (!isOverflowing) {
+              return Text(widget.event.description, style: AppTextStyles.body);
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 250),
+                  crossFadeState: _isDescriptionExpanded
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  firstChild: Text(
+                    widget.event.description,
+                    style: AppTextStyles.body,
+                    maxLines: _descriptionMaxLines,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  secondChild: Text(
+                    widget.event.description,
+                    style: AppTextStyles.body,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                GestureDetector(
+                  onTap: () => setState(
+                    () => _isDescriptionExpanded = !_isDescriptionExpanded,
+                  ),
+                  child: Text(
+                    _isDescriptionExpanded ? 'Свернуть' : 'Читать дальше',
+                    style: AppTextStyles.buttonSecondary,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
