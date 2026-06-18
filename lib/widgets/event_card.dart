@@ -31,9 +31,10 @@ class _EventCardState extends State<EventCard>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _heartScale = Tween<double>(begin: 1.0, end: 1.35).animate(
-      CurvedAnimation(parent: _heartController, curve: Curves.easeOut),
-    );
+    _heartScale = Tween<double>(
+      begin: 1.0,
+      end: 1.35,
+    ).animate(CurvedAnimation(parent: _heartController, curve: Curves.easeOut));
   }
 
   @override
@@ -76,10 +77,13 @@ class _EventCardState extends State<EventCard>
   Widget _buildThumbnail() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: Container(
+      child: Image.network(
+        widget.event.imageUrl,
         width: 80,
         height: 80,
-        color: AppColors.imagePlaceholder,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) =>
+            Container(width: 80, height: 80, color: AppColors.imagePlaceholder),
       ),
     );
   }

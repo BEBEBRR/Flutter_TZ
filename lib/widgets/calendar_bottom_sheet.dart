@@ -364,12 +364,19 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: AppColors.imagePlaceholder,
-                      borderRadius: BorderRadius.circular(8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      e.imageUrl,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 64,
+                        height: 64,
+                        color: AppColors.imagePlaceholder,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),

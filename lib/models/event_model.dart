@@ -27,6 +27,7 @@ class EventModel {
   bool isFavorite;
   final String authorName;
   final String authorCompany;
+  final String imageUrl;
   final List<ProgramItem> program;
   final List<Speaker> speakers;
 
@@ -42,6 +43,7 @@ class EventModel {
     this.isFavorite = false,
     required this.authorName,
     required this.authorCompany,
+    required this.imageUrl,
     this.program = const [],
     this.speakers = const [],
   });

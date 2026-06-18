@@ -82,7 +82,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            Container(color: AppColors.imagePlaceholder),
+            Image.network(
+              widget.event.imageUrl,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(color: AppColors.imagePlaceholder);
+              },
+            ),
             // Градиент снизу для читаемости
             Positioned(
               bottom: 0,
@@ -348,6 +355,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             const CircleAvatar(
               radius: 22,
               backgroundColor: AppColors.imagePlaceholder,
+              child: Icon(Icons.person, color: Colors.white, size: 24),
             ),
             const SizedBox(width: 12),
             Column(
