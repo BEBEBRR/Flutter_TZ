@@ -1,6 +1,5 @@
 import '../models/event_model.dart';
 
-// Глобальный список событий (мутируется при лайках)
 final List<EventModel> mockEvents = [
   EventModel(
     id: '1',
@@ -15,8 +14,9 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'Имя Автора Мероприятия',
     authorCompany: 'Компания IT International',
+    imageUrl: 'https://picsum.photos/seed/event1/800/600',
     program: [
-      ProgramItem(
+      const ProgramItem(
         startTime: '18:00',
         endTime: '18:20',
         title: 'Открытие мероприятия',
@@ -25,77 +25,40 @@ final List<EventModel> mockEvents = [
         description: 'Приветственное слово и знакомство с участниками',
         status: ProgramItemStatus.now,
       ),
-      ProgramItem(
+      const ProgramItem(
         startTime: '18:20',
         endTime: '18:50',
         title: 'Первый спикер',
         speakerName: 'Данияр Ахметов',
         speakerRole: 'Спикер',
-        description: 'Приветственное слово и знакомство с участниками',
+        description: 'Тренды развития IT в регионах',
         status: ProgramItemStatus.delayed,
       ),
-      ProgramItem(
+      const ProgramItem(
         startTime: '18:50',
         endTime: '19:20',
         title: 'Второй спикер',
         speakerName: 'Асель Нурланова',
-        speakerRole: 'Организатор',
-        description: 'Приветственное слово и знакомство с участниками',
-        status: ProgramItemStatus.scheduled,
-      ),
-      ProgramItem(
-        startTime: '19:20',
-        endTime: '19:50',
-        title: 'Третий спикер',
-        speakerName: 'Марат Жаксыбеков',
         speakerRole: 'Спикер',
-        description: 'Приветственное слово и знакомство с участниками',
-        status: ProgramItemStatus.scheduled,
-      ),
-      ProgramItem(
-        startTime: '19:50',
-        endTime: '20:20',
-        title: 'Четвёртый спикер',
-        speakerName: 'Назгуль Оспанова',
-        speakerRole: 'Модератор',
-        description: 'Приветственное слово и знакомство с участниками',
-        status: ProgramItemStatus.scheduled,
-      ),
-      ProgramItem(
-        startTime: '20:20',
-        endTime: '20:50',
-        title: 'Пятый спикер',
-        speakerName: 'Бауыржан Сейткали',
-        speakerRole: 'Спикер',
-        description: 'Приветственное слово и знакомство с участниками',
-        status: ProgramItemStatus.scheduled,
-      ),
-      ProgramItem(
-        startTime: '20:50',
-        endTime: '21:00',
-        title: 'Закрытие',
-        speakerName: 'Айгерим Сейткали',
-        speakerRole: 'Организатор',
-        description: 'Подведение итогов и награждение победителей',
+        description: 'Как собрать команду для стартапа',
         status: ProgramItemStatus.scheduled,
       ),
     ],
     speakers: [
-      Speaker(
+      const Speaker(
         name: 'Айгерим Сейткали',
         role: 'Организатор',
         company: 'IT International',
       ),
-      Speaker(name: 'Данияр Ахметов', role: 'Спикер', company: 'Tech Hub KZ'),
-      Speaker(
-        name: 'Асель Нурланова',
-        role: 'Организатор',
-        company: 'Startup KZ',
-      ),
-      Speaker(
-        name: 'Марат Жаксыбеков',
+      const Speaker(
+        name: 'Данияр Ахметов',
         role: 'Спикер',
-        company: 'Digital Agency',
+        company: 'Tech Hub KZ',
+      ),
+      const Speaker(
+        name: 'Асель Нурланова',
+        role: 'Спикер',
+        company: 'Startup KZ',
       ),
     ],
   ),
@@ -112,10 +75,30 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'Бизнес-центр «Атырау»',
     authorCompany: 'Business Corp KZ',
-    program: [],
+    imageUrl: 'https://picsum.photos/seed/event2/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '10:00',
+        endTime: '11:00',
+        title: 'Регистрация и нетворкинг',
+        speakerName: 'Оргкомитет',
+        speakerRole: 'Организатор',
+        description: 'Сбор гостей, приветственный кофе',
+        status: ProgramItemStatus.scheduled,
+      ),
+      const ProgramItem(
+        startTime: '11:00',
+        endTime: '12:30',
+        title: 'Цифровизация 2026',
+        speakerName: 'Ержан Касымов',
+        speakerRole: 'CEO',
+        description: 'Главные вызовы для бизнеса в этом году',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
     speakers: [
-      Speaker(name: 'Ержан Касымов', role: 'CEO', company: 'DigiCorp'),
-      Speaker(name: 'Лаура Сейткали', role: 'CTO', company: 'InnoTech'),
+      const Speaker(name: 'Ержан Касымов', role: 'CEO', company: 'DigiCorp'),
+      const Speaker(name: 'Лаура Сейткали', role: 'CTO', company: 'InnoTech'),
     ],
   ),
   EventModel(
@@ -131,9 +114,33 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'Арман Бейсенов',
     authorCompany: 'Sales Academy',
-    program: [],
+    imageUrl: 'https://picsum.photos/seed/event3/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '14:00',
+        endTime: '15:30',
+        title: 'Психология продаж',
+        speakerName: 'Арман Бейсенов',
+        speakerRole: 'Тренер',
+        description: 'Как понимать клиента с полуслова',
+        status: ProgramItemStatus.scheduled,
+      ),
+      const ProgramItem(
+        startTime: '15:45',
+        endTime: '17:00',
+        title: 'Работа с возражениями (Практика)',
+        speakerName: 'Арман Бейсенов',
+        speakerRole: 'Тренер',
+        description: 'Разбор реальных диалогов',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
     speakers: [
-      Speaker(name: 'Арман Бейсенов', role: 'Тренер', company: 'Sales Academy'),
+      const Speaker(
+        name: 'Арман Бейсенов',
+        role: 'Тренер',
+        company: 'Sales Academy',
+      ),
     ],
   ),
   EventModel(
@@ -149,14 +156,34 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'Дина Аблакимова',
     authorCompany: 'Marketing Pro',
-    program: [],
+    imageUrl: 'https://picsum.photos/seed/event4/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '19:00',
+        endTime: '19:45',
+        title: 'ИИ в создании контента',
+        speakerName: 'Руслан Байжанов',
+        speakerRole: 'AI-специалист',
+        description: 'Генерация текстов и креативов',
+        status: ProgramItemStatus.scheduled,
+      ),
+      const ProgramItem(
+        startTime: '19:45',
+        endTime: '21:00',
+        title: 'Автоматизация рекламы',
+        speakerName: 'Дина Аблакимова',
+        speakerRole: 'Маркетолог',
+        description: 'Кейсы увеличения конверсии',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
     speakers: [
-      Speaker(
+      const Speaker(
         name: 'Дина Аблакимова',
         role: 'Маркетолог',
         company: 'Marketing Pro',
       ),
-      Speaker(
+      const Speaker(
         name: 'Руслан Байжанов',
         role: 'AI-специалист',
         company: 'AI Solutions',
@@ -176,8 +203,34 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'Бизнес-клуб Атырау',
     authorCompany: 'Community Hub',
-    program: [],
-    speakers: [],
+    imageUrl: 'https://picsum.photos/seed/event5/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '18:30',
+        endTime: '19:00',
+        title: 'Welcome Drink',
+        speakerName: 'Модератор',
+        speakerRole: 'Ведущий',
+        description: 'Свободное общение',
+        status: ProgramItemStatus.scheduled,
+      ),
+      const ProgramItem(
+        startTime: '19:00',
+        endTime: '21:00',
+        title: 'Speed Networking',
+        speakerName: 'Модератор',
+        speakerRole: 'Ведущий',
+        description: 'Быстрые знакомства по 3 минуты',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
+    speakers: [
+      const Speaker(
+        name: 'Алишер Сулейменов',
+        role: 'Модератор',
+        company: 'Community Hub',
+      ),
+    ],
   ),
   EventModel(
     id: '6',
@@ -192,9 +245,29 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'TechStream',
     authorCompany: 'Tech Company',
-    program: [],
+    imageUrl: 'https://picsum.photos/seed/event6/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '15:00',
+        endTime: '16:00',
+        title: 'Презентация релиза',
+        speakerName: 'Нурлан Асанов',
+        speakerRole: 'Product Manager',
+        description: 'Показ главных фич нового сервиса',
+        status: ProgramItemStatus.scheduled,
+      ),
+      const ProgramItem(
+        startTime: '16:00',
+        endTime: '17:00',
+        title: 'Q&A сессия',
+        speakerName: 'Нурлан Асанов',
+        speakerRole: 'Product Manager',
+        description: 'Ответы на вопросы зрителей',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
     speakers: [
-      Speaker(
+      const Speaker(
         name: 'Нурлан Асанов',
         role: 'Product Manager',
         company: 'TechStream',
@@ -214,8 +287,30 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'IT Meetup KZ',
     authorCompany: 'Startup Hub',
-    program: [],
-    speakers: [],
+    imageUrl: 'https://picsum.photos/seed/event7/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '18:00',
+        endTime: '19:30',
+        title: 'Питчинг проектов',
+        speakerName: 'Инвесторы',
+        speakerRole: 'Жюри',
+        description: 'Презентация 5 лучших стартапов',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
+    speakers: [
+      const Speaker(
+        name: 'Тимур Батыр',
+        role: 'Инвестор',
+        company: 'VC Fund KZ',
+      ),
+      const Speaker(
+        name: 'Диас Камалов',
+        role: 'Founder',
+        company: 'EdTech Startup',
+      ),
+    ],
   ),
   EventModel(
     id: '8',
@@ -230,8 +325,25 @@ final List<EventModel> mockEvents = [
     isFavorite: false,
     authorName: 'EduKZ',
     authorCompany: 'Education Plus',
-    program: [],
-    speakers: [],
+    imageUrl: 'https://picsum.photos/seed/event8/800/600',
+    program: [
+      const ProgramItem(
+        startTime: '09:00',
+        endTime: '10:30',
+        title: 'EdTech тренды',
+        speakerName: 'Сабина Мусина',
+        speakerRole: 'Эксперт',
+        description: 'Глобальные изменения в образовании',
+        status: ProgramItemStatus.scheduled,
+      ),
+    ],
+    speakers: [
+      const Speaker(
+        name: 'Сабина Мусина',
+        role: 'Эксперт по EdTech',
+        company: 'Global Edu',
+      ),
+    ],
   ),
 ];
 
