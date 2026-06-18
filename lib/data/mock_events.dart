@@ -12,7 +12,7 @@ final List<EventModel> mockEvents = [
     city: 'Атырау',
     format: EventFormat.hybrid,
     type: 'IT и стартапы',
-    isFavorite: true,
+    isFavorite: false,
     authorName: 'Имя Автора Мероприятия',
     authorCompany: 'Компания IT International',
     program: [
@@ -81,10 +81,22 @@ final List<EventModel> mockEvents = [
       ),
     ],
     speakers: [
-      Speaker(name: 'Айгерим Сейткали', role: 'Организатор', company: 'IT International'),
+      Speaker(
+        name: 'Айгерим Сейткали',
+        role: 'Организатор',
+        company: 'IT International',
+      ),
       Speaker(name: 'Данияр Ахметов', role: 'Спикер', company: 'Tech Hub KZ'),
-      Speaker(name: 'Асель Нурланова', role: 'Организатор', company: 'Startup KZ'),
-      Speaker(name: 'Марат Жаксыбеков', role: 'Спикер', company: 'Digital Agency'),
+      Speaker(
+        name: 'Асель Нурланова',
+        role: 'Организатор',
+        company: 'Startup KZ',
+      ),
+      Speaker(
+        name: 'Марат Жаксыбеков',
+        role: 'Спикер',
+        company: 'Digital Agency',
+      ),
     ],
   ),
   EventModel(
@@ -134,13 +146,21 @@ final List<EventModel> mockEvents = [
     city: 'Атырау',
     format: EventFormat.online,
     type: 'Маркетинг и бизнес-события',
-    isFavorite: true,
+    isFavorite: false,
     authorName: 'Дина Аблакимова',
     authorCompany: 'Marketing Pro',
     program: [],
     speakers: [
-      Speaker(name: 'Дина Аблакимова', role: 'Маркетолог', company: 'Marketing Pro'),
-      Speaker(name: 'Руслан Байжанов', role: 'AI-специалист', company: 'AI Solutions'),
+      Speaker(
+        name: 'Дина Аблакимова',
+        role: 'Маркетолог',
+        company: 'Marketing Pro',
+      ),
+      Speaker(
+        name: 'Руслан Байжанов',
+        role: 'AI-специалист',
+        company: 'AI Solutions',
+      ),
     ],
   ),
   EventModel(
@@ -174,7 +194,11 @@ final List<EventModel> mockEvents = [
     authorCompany: 'Tech Company',
     program: [],
     speakers: [
-      Speaker(name: 'Нурлан Асанов', role: 'Product Manager', company: 'TechStream'),
+      Speaker(
+        name: 'Нурлан Асанов',
+        role: 'Product Manager',
+        company: 'TechStream',
+      ),
     ],
   ),
   EventModel(
