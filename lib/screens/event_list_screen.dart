@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_text_styles.dart';
 import '../data/mock_events.dart';
@@ -24,21 +25,24 @@ class _EventListScreenState extends State<EventListScreen> {
   int _selectedTabIndex = 0;
   String _selectedCity = 'Атырау';
   Set<String> _selectedTypes = {};
-  bool? _isOnline; // null = все, true = онлайн, false = оффлайн
+  bool _showOnline = true;
+  bool _showOffline = true;
   DateTime? _selectedDate;
 
   bool get _hasActiveFilters =>
-      _selectedTypes.isNotEmpty || _isOnline != null || _selectedDate != null;
+      _selectedTypes.isNotEmpty ||
+      !_showOnline ||
+      !_showOffline ||
+      _selectedDate != null;
 
   List<EventModel> get _filteredEvents {
     return mockEvents.where((event) {
       if (_selectedTabIndex == 1 && !event.isFavorite) return false;
-      if (_selectedTabIndex == 2) return false; // нет регистраций в моке
+      if (_selectedTabIndex == 2) return false;
       if (event.city != _selectedCity) return false;
-      if (_isOnline == true && event.format == EventFormat.offline)
-        return false;
-      if (_isOnline == false && event.format == EventFormat.online)
-        return false;
+      if (!_showOnline && event.format == EventFormat.online) return false;
+      if (!_showOffline && event.format == EventFormat.offline) return false;
+
       if (_selectedTypes.isNotEmpty && !_selectedTypes.contains(event.type)) {
         return false;
       }
@@ -69,17 +73,31 @@ class _EventListScreenState extends State<EventListScreen> {
   }
 
   void _openFilter() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => FilterBottomSheet(
-        selectedTypes: _selectedTypes,
-        isOnline: _isOnline,
-        onApply: (types, isOnline) => setState(() {
-          _selectedTypes = types;
-          _isOnline = isOnline;
-        }),
+    bool? currentIsOnline;
+    if (_showOnline && !_showOffline) currentIsOnline = true;
+    if (!_showOnline && _showOffline) currentIsOnline = false;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => FilterBottomSheet(
+          selectedTypes: _selectedTypes,
+          isOnline: currentIsOnline,
+          onApply: (types, isOnline) => setState(() {
+            _selectedTypes = types;
+            if (isOnline == true) {
+              _showOnline = true;
+              _showOffline = false;
+            } else if (isOnline == false) {
+              _showOnline = false;
+              _showOffline = true;
+            } else {
+              _showOnline = true;
+              _showOffline = true;
+            }
+          }),
+        ),
       ),
     );
   }
@@ -101,77 +119,132 @@ class _EventListScreenState extends State<EventListScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => EventDetailScreen(event: event)),
-    ).then((_) => setState(() {})); // refresh на возврате (обновление лайков)
+    ).then((_) => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
     final events = _filteredEvents;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildAppBar(),
-            const SizedBox(height: 12),
-            TabFilterBar(
-              tabs: _tabs,
-              selectedIndex: _selectedTabIndex,
-              onTabSelected: (i) => setState(() => _selectedTabIndex = i),
-            ),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(103),
+        child: _buildAppBar(statusBarHeight),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 12),
+          TabFilterBar(
+            tabs: _tabs,
+            selectedIndex: _selectedTabIndex,
+            onTabSelected: (i) => setState(() => _selectedTabIndex = i),
+          ),
+          if (_hasActiveFilters) ...[
             const SizedBox(height: 10),
-            _buildFilterRow(),
-            if (_hasActiveFilters) ...[
-              const SizedBox(height: 8),
-              _buildActiveFiltersRow(),
-            ],
-            const SizedBox(height: 10),
-            _buildCount(events.length),
-            const SizedBox(height: 8),
-            Expanded(child: _buildEventList(events)),
+            _buildActiveFiltersRow(),
           ],
-        ),
+          const SizedBox(height: 10),
+          _buildFilterRow(),
+          const SizedBox(height: 10),
+          _buildCount(events.length),
+          const SizedBox(height: 8),
+          Expanded(child: _buildEventList(events)),
+        ],
       ),
     );
   }
 
-  Widget _buildAppBar() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.chevron_left,
-            size: 28,
-            color: AppColors.textPrimary,
-          ),
-          const SizedBox(width: 4),
-          const Expanded(
-            child: Text('Мероприятия', style: AppTextStyles.appBarTitle),
-          ),
-          GestureDetector(
-            onTap: _openFilter,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              child: const Icon(
-                Icons.tune_rounded,
-                color: AppColors.textPrimary,
-                size: 22,
-              ),
-            ),
-          ),
-          const SizedBox(width: 4),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: const Icon(
-              Icons.search,
-              color: AppColors.textPrimary,
-              size: 22,
-            ),
+  Widget _buildAppBar(double statusBarHeight) {
+    return Container(
+      height: 103,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+            spreadRadius: 0,
           ),
         ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(20, statusBarHeight, 20, 16),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.maybePop(context),
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 20,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text('Мероприятия', style: AppTextStyles.headingLarge),
+              ),
+              GestureDetector(
+                onTap: _openFilter,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/filter.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.textPrimary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      if (_hasActiveFilters)
+                        Positioned(
+                          top: -1,
+                          right: -1,
+                          child: Container(
+                            width: 7,
+                            height: 7,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              GestureDetector(
+                onTap: () {
+                  // Метод поиска
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: SvgPicture.asset(
+                    'assets/search.svg',
+                    width: 24,
+                    height: 24,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.textPrimary,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -183,14 +256,14 @@ class _EventListScreenState extends State<EventListScreen> {
         children: [
           EventFilterChip(
             label: _selectedCity,
-            icon: Icons.location_on_outlined,
+            svgAsset: 'assets/geo.svg',
             hasDropdown: true,
             onTap: _openCityPicker,
           ),
           const Spacer(),
           EventFilterChip(
             label: 'Календарь',
-            icon: Icons.calendar_today_outlined,
+            svgAsset: 'assets/calendar.png',
             onTap: _openCalendar,
           ),
         ],
@@ -200,12 +273,35 @@ class _EventListScreenState extends State<EventListScreen> {
 
   Widget _buildActiveFiltersRow() {
     final chips = <Widget>[];
-
-    if (_isOnline != null) {
+    if (_showOnline && !_showOffline) {
       chips.add(
         ActiveFilterChip(
-          label: _isOnline! ? 'Онлайн' : 'Оффлайн',
-          onRemove: () => setState(() => _isOnline = null),
+          label: 'Онлайн',
+          onRemove: () => setState(() {
+            _showOnline = true;
+            _showOffline = true;
+          }),
+        ),
+      );
+    } else if (!_showOnline && _showOffline) {
+      chips.add(
+        ActiveFilterChip(
+          label: 'Оффлайн',
+          onRemove: () => setState(() {
+            _showOnline = true;
+            _showOffline = true;
+          }),
+        ),
+      );
+    }
+
+    if (_selectedTypes.isNotEmpty) {
+      chips.add(
+        ActiveFilterChip(
+          label: 'Тип мероприятия: ${_selectedTypes.length}',
+          onRemove: () => setState(() {
+            _selectedTypes.clear();
+          }),
         ),
       );
     }
@@ -220,23 +316,32 @@ class _EventListScreenState extends State<EventListScreen> {
       );
     }
 
-    for (final type in _selectedTypes) {
-      chips.add(
-        ActiveFilterChip(
-          label: type,
-          onRemove: () => setState(() => _selectedTypes.remove(type)),
-        ),
-      );
-    }
-
     return SizedBox(
       height: 32,
-      child: ListView.separated(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: chips.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (_, i) => chips[i],
+        itemCount: chips.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ResetFiltersButton(
+                onTap: () => setState(() {
+                  _selectedTypes.clear();
+                  _showOnline = true;
+                  _showOffline = true;
+                  _selectedDate = null;
+                }),
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: chips[index - 1],
+          );
+        },
       ),
     );
   }

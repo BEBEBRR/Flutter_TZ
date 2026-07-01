@@ -5,8 +5,7 @@ import '../data/mock_events.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   final Set<String> selectedTypes;
-  final bool? isOnline; // null = все, true = онлайн, false = оффлайн
-
+  final bool? isOnline;
   final void Function(Set<String> types, bool? isOnline) onApply;
 
   const FilterBottomSheet({
@@ -22,14 +21,16 @@ class FilterBottomSheet extends StatefulWidget {
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
   late Set<String> _selectedTypes;
-  bool? _isOnline;
+  late bool _onlineSelected;
+  late bool _offlineSelected;
   final Map<String, bool> _expandedCategories = {};
 
   @override
   void initState() {
     super.initState();
     _selectedTypes = Set.from(widget.selectedTypes);
-    _isOnline = widget.isOnline;
+    _onlineSelected = widget.isOnline == true;
+    _offlineSelected = widget.isOnline == false;
     for (final cat in eventTypeCategories) {
       _expandedCategories[cat['category'] as String] = true;
     }
@@ -37,76 +38,104 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.9,
-      minChildSize: 0.5,
-      maxChildSize: 0.95,
-      expand: false,
-      builder: (_, scrollController) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            _buildHandle(),
-            _buildHeader(),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFormatSection(),
-                    const SizedBox(height: 24),
-                    _buildTypeSection(),
-                    const SizedBox(height: 100),
-                  ],
-                ),
+    return Scaffold(
+      backgroundColor: AppColors.surface,
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildFormatSection(),
+                  const SizedBox(height: 24),
+                  _buildTypeSection(),
+                  const SizedBox(height: 100),
+                ],
               ),
             ),
-            _buildApplyButton(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHandle() {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      width: 36,
-      height: 4,
-      decoration: BoxDecoration(
-        color: AppColors.border,
-        borderRadius: BorderRadius.circular(2),
+          ),
+          _buildApplyButton(),
+        ],
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Icon(Icons.close, color: AppColors.textPrimary),
-          ),
-          const Expanded(
-            child: Center(
-              child: Text('Фильтр', style: AppTextStyles.heading2),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => setState(() {
-              _selectedTypes.clear();
-              _isOnline = null;
-            }),
-            child: const Text('Сбросить', style: AppTextStyles.buttonSecondary),
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
+
+    return Container(
+      height: 103,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            offset: const Offset(0, 2),
+            blurRadius: 8,
+            spreadRadius: 0,
           ),
         ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16, statusBarHeight, 16, 16),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: 40,
+            child: Stack(
+              children: [
+                Center(
+                  child: Text(
+                    'Фильтр',
+                    style: AppTextStyles.heading2.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        Icons.close,
+                        color: AppColors.textPrimary,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () => setState(() {
+                        _selectedTypes.clear();
+                        _onlineSelected = false;
+                        _offlineSelected = false;
+                      }),
+                      child: const Text(
+                        'Сбросить',
+                        style: AppTextStyles.buttonSecondary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -127,18 +156,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           children: [
             _FormatToggleButton(
               label: 'Онлайн',
-              isActive: _isOnline == true,
-              onTap: () => setState(
-                () => _isOnline = _isOnline == true ? null : true,
-              ),
+              isActive: _onlineSelected,
+              onTap: () => setState(() => _onlineSelected = !_onlineSelected),
             ),
             const SizedBox(width: 8),
             _FormatToggleButton(
               label: 'Оффлайн',
-              isActive: _isOnline == false,
-              onTap: () => setState(
-                () => _isOnline = _isOnline == false ? null : false,
-              ),
+              isActive: _offlineSelected,
+              onTap: () => setState(() => _offlineSelected = !_offlineSelected),
             ),
           ],
         ),
@@ -172,9 +197,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () => setState(
-            () => _expandedCategories[category] = !isExpanded,
-          ),
+          onTap: () =>
+              setState(() => _expandedCategories[category] = !isExpanded),
           behavior: HitTestBehavior.opaque,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -241,7 +265,15 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         height: 52,
         child: ElevatedButton(
           onPressed: () {
-            widget.onApply(Set.from(_selectedTypes), _isOnline);
+            bool? appliedIsOnline;
+            if (_onlineSelected && !_offlineSelected) {
+              appliedIsOnline = true;
+            } else if (!_onlineSelected && _offlineSelected) {
+              appliedIsOnline = false;
+            } else {
+              appliedIsOnline = null;
+            }
+            widget.onApply(Set.from(_selectedTypes), appliedIsOnline);
             Navigator.pop(context);
           },
           style: ElevatedButton.styleFrom(
@@ -328,14 +360,12 @@ class _CheckboxWidget extends StatelessWidget {
 class _TypeCheckboxItem extends StatelessWidget {
   final String label;
   final bool isChecked;
-  final ValueChanged<bool> onChanged;
-
+  final ValueChanged onChanged;
   const _TypeCheckboxItem({
     required this.label,
     required this.isChecked,
     required this.onChanged,
   });
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
