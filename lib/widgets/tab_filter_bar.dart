@@ -17,7 +17,7 @@ class TabFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 36,
+      height: 42,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -29,20 +29,22 @@ class TabFilterBar extends StatelessWidget {
             onTap: () => onTabSelected(index),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.surface,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.border,
-                ),
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.chipBackground,
+                borderRadius: BorderRadius.circular(30),
               ),
               alignment: Alignment.center,
               child: Text(
                 tabs[index],
                 style: isSelected
-                    ? AppTextStyles.chipActive
-                    : AppTextStyles.chipInactive,
+                    ? AppTextStyles.chipActive.copyWith(color: Colors.white)
+                    : AppTextStyles.chipInactive.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
               ),
             ),
           );
