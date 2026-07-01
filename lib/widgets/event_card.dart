@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_text_styles.dart';
 import '../models/event_model.dart';
@@ -59,7 +60,14 @@ class _EventCardState extends State<EventCard>
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +84,7 @@ class _EventCardState extends State<EventCard>
 
   Widget _buildThumbnail() {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(10),
       child: Image.network(
         widget.event.imageUrl,
         width: 80,
@@ -101,10 +109,14 @@ class _EventCardState extends State<EventCard>
         const SizedBox(height: 6),
         Row(
           children: [
-            const Icon(
-              Icons.access_time_rounded,
-              size: 14,
-              color: AppColors.primary,
+            SvgPicture.asset(
+              'assets/time.svg',
+              width: 14,
+              height: 14,
+              colorFilter: const ColorFilter.mode(
+                AppColors.primary,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: 4),
             Expanded(
@@ -128,12 +140,12 @@ class _EventCardState extends State<EventCard>
         padding: const EdgeInsets.only(left: 8, top: 2),
         child: ScaleTransition(
           scale: _heartScale,
-          child: Icon(
-            widget.event.isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: widget.event.isFavorite
-                ? AppColors.primary
-                : AppColors.textSecondary,
-            size: 22,
+          child: SvgPicture.asset(
+            widget.event.isFavorite
+                ? 'assets/active_heart.svg'
+                : 'assets/default_heart.svg',
+            width: 22,
+            height: 22,
           ),
         ),
       ),
