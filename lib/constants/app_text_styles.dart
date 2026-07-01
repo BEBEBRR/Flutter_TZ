@@ -86,4 +86,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.textSecondary,
   );
+
+  static const TextStyle headingLarge = TextStyle(
+    fontFamily: 'Montserrat',
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+    height: 1.0,
+  );
 }
